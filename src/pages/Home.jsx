@@ -7,12 +7,7 @@ const RegistrationLink = () => {
   const handleRegistration = () => {
     setLoading(true);
 
-    // Your API endpoint with parameters
-
-
     const registrationUrl = `/api/registrationLink`;
-
-    // console.log('Redirecting to:', registrationUrl);
 
     window.location.href = registrationUrl;
   };
@@ -20,23 +15,34 @@ const RegistrationLink = () => {
 
   const handleLogin = () => {
     setLoading1(true);
-    console.log("login click")
-
-    // Your API endpoint with parameters
-
 
     const loginUrl = `/api/loginLink`;
 
-    // console.log('Redirecting to:', registrationUrl);
-
     window.location.href = loginUrl;
+  };
+
+
+  const handleGetUserProfile = () => {
+    setLoading1(true);
+
+    const GetProfileUrl = `/api/userDataLink`;
+
+    window.location.href = GetProfileUrl;
+  };
+
+    const handleGetClientProfile = () => {
+    setLoading1(true);
+
+    const GetProfileUrl = `/api/clientDataLink`;
+
+    window.location.href = GetProfileUrl;
   };
 
   return (
     <div>
 
       <div style={{
-        padding: '2rem',
+        padding: '0.5rem',
         textAlign: 'center',
         fontFamily: 'Arial, sans-serif'
       }}>
@@ -68,12 +74,12 @@ const RegistrationLink = () => {
       </div>
 
 
-            <div style={{
-        padding: '2rem',
+      <div style={{
+        padding: '0.5rem',
         textAlign: 'center',
         fontFamily: 'Arial, sans-serif'
       }}>
-       
+
         <p>Click the button below to proceed with login</p>
 
         <button
@@ -90,7 +96,72 @@ const RegistrationLink = () => {
             marginTop: '1rem'
           }}
         >
-          {loading1? 'Redirecting...' : 'Start Login'}
+          {loading1 ? 'Redirecting...' : 'Start Login'}
+        </button>
+
+        {loading1 && (
+          <p style={{ marginTop: '1rem', color: '#666' }}>
+            Redirecting to login portal...
+          </p>
+        )}
+      </div>
+
+
+      <div style={{
+        padding: '0.5rem',
+        textAlign: 'center',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+
+        <p>Click to proceed with Getting User Profile Info.</p>
+
+        <button
+          onClick={handleGetUserProfile}
+          disabled={loading1}
+          style={{
+            padding: '12px 24px',
+            fontSize: '16px',
+            backgroundColor: loading1 ? '#ccc' : '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: loading1 ? 'not-allowed' : 'pointer',
+            marginTop: '1rem'
+          }}
+        >
+          {loading1 ? 'Redirecting...' : 'Start User Profile Link'}
+        </button>
+
+        {loading1 && (
+          <p style={{ marginTop: '1rem', color: '#666' }}>
+            Redirecting to login portal...
+          </p>
+        )}
+      </div>
+
+      <div style={{
+        padding: '0.5rem',
+        textAlign: 'center',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+
+        <p>Click to proceed with Getting Client Profile Info.</p>
+
+        <button
+          onClick={handleGetClientProfile}
+          disabled={loading1}
+          style={{
+            padding: '12px 24px',
+            fontSize: '16px',
+            backgroundColor: loading1 ? '#ccc' : '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: loading1 ? 'not-allowed' : 'pointer',
+            marginTop: '1rem'
+          }}
+        >
+          {loading1 ? 'Redirecting...' : 'Start Client Profile Link'}
         </button>
 
         {loading1 && (
