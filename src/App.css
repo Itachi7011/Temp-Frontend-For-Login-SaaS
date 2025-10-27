@@ -1,73 +1,191 @@
-.test-api-container {
-  max-width: 800px;
+.portal-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.portal-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: white;
+}
+
+.portal-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.portal-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    sans-serif;
 }
 
-.api-info {
-  background: #f5f5f5;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+.button-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.test-button {
-  background: #007bff;
+.button-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.button-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+}
+
+.card-description {
+  color: #718096;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.action-button {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 10px;
   cursor: pointer;
-  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.test-button:hover:not(:disabled) {
-  background: #0056b3;
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
-.test-button:disabled {
-  background: #6c757d;
+.action-button:hover::before {
+  left: 100%;
+}
+
+.action-button:hover:not(.loading) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.action-button:active:not(.loading) {
+  transform: translateY(0);
+}
+
+.action-button.loading {
+  background: #cbd5e0;
   cursor: not-allowed;
+  transform: none;
 }
 
-.error-box {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  border: 1px solid #f5c6cb;
+.action-button.loading::before {
+  display: none;
 }
 
-.response-box {
-  background: #d4edda;
-  color: #155724;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  border: 1px solid #c3e6cb;
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.response-box pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.request-details {
-  background: #e9ecef;
-  padding: 15px;
-  border-radius: 6px;
-  margin-top: 20px;
+.loading-text {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #718096;
+  animation: pulse 2s infinite;
 }
 
-.request-details ul {
-  list-style: none;
-  padding: 0;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
-.request-details li {
-  margin: 5px 0;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .portal-container {
+    padding: 1rem;
+  }
+  
+  .portal-title {
+    font-size: 2rem;
+  }
+  
+  .buttons-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .button-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-title {
+    font-size: 1.75rem;
+  }
+  
+  .portal-subtitle {
+    font-size: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+  }
 }
