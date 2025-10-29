@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Home from "./pages/Home"
 import './App.css'
-import { init } from 'authnest-frontend';
+import { init } from 'authnest-react';
 
 const NODE_ENV = 'development'
 
