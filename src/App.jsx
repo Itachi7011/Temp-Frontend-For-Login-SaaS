@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from "./pages/Home"
+import ModalsTesting from "./pages/ModalsTesting"
 import './App.css'
 import { init } from 'authnest-react';
 
@@ -20,7 +22,7 @@ function App() {
     const initializeAuth = async () => {
       try {
         console.log('🔄 Starting auth initialization...');
-        
+
         // Initialize AuthNest
         const authInstance = init({
           debug: NODE_ENV === 'development'
@@ -37,7 +39,7 @@ function App() {
         if (authInstance && typeof authInstance.getStatus === 'function') {
           const status = authInstance.getStatus();
           console.log('🔐 Initial auth status:', status);
-          
+
           if (mounted) {
             setAuthStatus({
               isAuthenticated: status.isAuthenticated,
@@ -77,55 +79,70 @@ function App() {
   }, []);
 
   // Add this useEffect to your existing App.jsx
-useEffect(() => {
-  const handleLoginCallback = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const sessionId = urlParams.get('session_id');
+  useEffect(() => {
+    const handleLoginCallback = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      const sessionId = urlParams.get('session_id');
 
-    if (token && sessionId && auth) {
-      console.log('🔄 Login callback detected, handling token storage...');
-      
-      try {
-        const result = await auth.handleLoginCallback(token, sessionId);
-        
-        if (result.success) {
-          console.log('✅ Login callback handled successfully');
-          // Update UI state
-          setAuthStatus({
-            isAuthenticated: true,
-            isLoading: false,
-            hasSession: false
-          });
-          
-          // Clean URL
-          window.history.replaceState({}, '', window.location.pathname);
-        } else {
-          console.error('❌ Login callback failed:', result.error);
+      if (token && sessionId && auth) {
+        console.log('🔄 Login callback detected, handling token storage...');
+
+        try {
+          const result = await auth.handleLoginCallback(token, sessionId);
+
+          if (result.success) {
+            console.log('✅ Login callback handled successfully');
+            // Update UI state
+            setAuthStatus({
+              isAuthenticated: true,
+              isLoading: false,
+              hasSession: false
+            });
+
+            // Clean URL
+            window.history.replaceState({}, '', window.location.pathname);
+          } else {
+            console.error('❌ Login callback failed:', result.error);
+          }
+        } catch (error) {
+          console.error('❌ Error handling login callback:', error);
         }
-      } catch (error) {
-        console.error('❌ Error handling login callback:', error);
       }
-    }
-  };
+    };
 
-  handleLoginCallback();
-}, [auth]);
+    handleLoginCallback();
+  }, [auth]);
+
+  // In your App.jsx, add this useEffect
+  useEffect(() => {
+    // Check package loading
+    import('authnest-react').then((pkg) => {
+      console.log('📦 AUTHNEST-REACT PACKAGE LOADED:', {
+        exports: Object.keys(pkg),
+        hasAuthNestModals: !!pkg.AuthNestModals,
+        hasInit: !!pkg.init,
+        hasSessionAuth: !!pkg.SessionAuth
+      });
+    }).catch(error => {
+      console.error('❌ FAILED TO LOAD AUTHNEST-REACT PACKAGE:', error);
+    });
+  }, []);
 
   const handleLogin = async () => {
     if (!auth) return;
 
     try {
       setAuthStatus(prev => ({ ...prev, isLoading: true }));
-      
+
       // Create a fresh session for login
       const authRequest = await auth.prepareAuthRequest('login');
       console.log('📝 Prepared auth request:', authRequest);
-      
+
       // Get the session ID
       const sessionId = auth.getSessionId();
       console.log('🔑 Session ID for login:', sessionId);
-      
+
       if (sessionId) {
         // Redirect to login with session ID
         console.log('🔗 Redirecting to login...');
@@ -149,7 +166,7 @@ useEffect(() => {
       auth.logout();
     }
     localStorage.removeItem('authnest_session');
-    
+
     // Redirect to basic login without session
     window.location.href = '/api/loginLink';
   };
@@ -168,14 +185,14 @@ useEffect(() => {
 
   const retryAuthCheck = async () => {
     if (!auth) return;
-    
+
     setAuthStatus(prev => ({ ...prev, isLoading: true }));
-    
+
     try {
       // Wait a bit and check status again
       await new Promise(resolve => setTimeout(resolve, 1000));
       const status = auth.getStatus();
-      
+
       setAuthStatus({
         isAuthenticated: status.isAuthenticated,
         isLoading: false,
@@ -220,7 +237,7 @@ useEffect(() => {
         ) : (
           <div>
             <h2>Authentication Required</h2>
-            
+
             {authStatus.hasSession ? (
               <div>
                 <p>We found an existing session, but couldn't authenticate automatically.</p>
@@ -250,8 +267,14 @@ useEffect(() => {
           </div>
         )}
       </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home auth={auth} />} />
+          <Route path="/ModalsTesting" element={<ModalsTesting />} />
 
-      <Home auth={auth}  />
+        </Routes>
+      </Router>
+
     </>
   );
 }
