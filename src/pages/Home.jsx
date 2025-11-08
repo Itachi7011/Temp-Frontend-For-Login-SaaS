@@ -13,7 +13,7 @@ const HomePage = ({ auth }) => {
             Session ID: {auth.getSessionId() || 'No active session'}
           </div>
         )}
-      </div>
+      </div> 
 
       <div className="buttons-grid">
         {buttonConfigs.map((config) => (
