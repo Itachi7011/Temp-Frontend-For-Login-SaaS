@@ -1,80 +1,23 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from 'authnest-react';
+import { useModalTesting } from 'authnest-react';
 
 const ModalsTesting = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [modalsAvailable, setModalsAvailable] = useState(false);
-  const { authStatus } = useAuth();
-
-  // Check if npm package modals are available
-  useEffect(() => {
-    const checkModalsAvailability = () => {
-      const hasModals = !!(window.authnestModals && typeof window.authnestModals.show2FAModal === 'function');
-      setModalsAvailable(hasModals);
-
-      if (hasModals) {
-        console.log('✅ AuthNestModals from npm package is available');
-      } else {
-        console.log('❌ AuthNestModals not available');
-      }
-    };
-
-    checkModalsAvailability();
-    const timeoutId = setTimeout(checkModalsAvailability, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  const testModal = async (modalType, modalName) => {
-    if (!window.authnestModals) {
-      setMessage('❌ AuthNest modals not loaded from npm package.');
-      return;
-    }
-
-    setIsLoading(true);
-    setMessage('');
-
-    try {
-      const result = await window.authnestModals[modalType]({
-        title: modalName,
-        userContext: {
-          reason: 'Testing modal functionality'
-        }
-      });
-
-      setMessage(`✅ ${modalName} Successful!`);
-    } catch (error) {
-      setMessage(`❌ Error: ${error.message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const test2FAModal = () => testModal('show2FAModal', '2FA Verification');
-  const testPasswordModal = () => testModal('showPasswordConfirmModal', 'Password Confirmation');
-  const testEmailModal = () => testModal('showEmailVerificationModal', 'Email Verification');
-
-  const reloadPage = () => {
-    window.location.reload();
-  };
-
-  const debugInfo = () => {
-    console.log('🔍 Debug Info:', {
-      authnest: window.authnest,
-      authnestModals: window.authnestModals,
-      AuthNestModalsClass: window.AuthNestModals,
-      modalsAvailable: modalsAvailable,
-      authStatus: authStatus
-    });
-    setMessage('✅ Debug info logged to console');
-  };
+  const {
+    isLoading,
+    message,
+    authStatus,
+    modalsAvailable,
+    test2FAModal,
+    testPasswordModal,
+    testEmailModal,
+    reloadPage,
+    debugInfo
+  } = useModalTesting();
 
   if (authStatus.isLoading) {
     return (
-      <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
+      <div style={{ 
+        maxWidth: '800px', 
+        margin: '0 auto', 
         padding: '40px 20px',
         fontFamily: 'Arial, sans-serif'
       }}>
@@ -85,17 +28,17 @@ const ModalsTesting = () => {
   }
 
   return (
-    <div style={{
-      maxWidth: '800px',
-      margin: '0 auto',
+    <div style={{ 
+      maxWidth: '800px', 
+      margin: '0 auto', 
       padding: '40px 20px',
       fontFamily: 'Arial, sans-serif'
     }}>
       <h1>AuthNest Modals Testing</h1>
-
+      
       {/* Auth Status */}
-      <div style={{
-        padding: '20px',
+      <div style={{ 
+        padding: '20px', 
         backgroundColor: authStatus.isAuthenticated ? '#d4edda' : '#f8d7da',
         borderRadius: '8px',
         marginBottom: '20px'
@@ -111,8 +54,8 @@ const ModalsTesting = () => {
       </div>
 
       {/* Package Status */}
-      <div style={{
-        padding: '20px',
+      <div style={{ 
+        padding: '20px', 
         backgroundColor: modalsAvailable ? '#d4edda' : '#fff3cd',
         borderRadius: '8px',
         marginBottom: '30px'
@@ -125,10 +68,10 @@ const ModalsTesting = () => {
             <>⚠️ <strong>AuthNestModals Not Loaded</strong> - Check console for details</>
           )}
         </p>
-
+        
         {!modalsAvailable && (
           <div style={{ marginTop: '10px' }}>
-            <button
+            <button 
               onClick={reloadPage}
               style={{
                 padding: '8px 16px',
@@ -142,7 +85,7 @@ const ModalsTesting = () => {
             >
               Reload Page
             </button>
-            <button
+            <button 
               onClick={debugInfo}
               style={{
                 padding: '8px 16px',
@@ -165,9 +108,9 @@ const ModalsTesting = () => {
         <p style={{ color: '#666' }}>
           Each modal will first verify your user token from cookies, then show the specific authentication modal.
         </p>
-
+        
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '20px' }}>
-          <button
+          <button 
             onClick={test2FAModal}
             disabled={isLoading || !authStatus.isAuthenticated || !modalsAvailable}
             style={{
@@ -181,8 +124,8 @@ const ModalsTesting = () => {
           >
             Test 2FA Modal
           </button>
-
-          <button
+          
+          <button 
             onClick={testPasswordModal}
             disabled={isLoading || !authStatus.isAuthenticated || !modalsAvailable}
             style={{
@@ -196,8 +139,8 @@ const ModalsTesting = () => {
           >
             Test Password Modal
           </button>
-
-          <button
+          
+          <button 
             onClick={testEmailModal}
             disabled={isLoading || !authStatus.isAuthenticated || !modalsAvailable}
             style={{
@@ -216,7 +159,7 @@ const ModalsTesting = () => {
 
       {/* Status Message */}
       {message && (
-        <div style={{
+        <div style={{ 
           padding: '15px',
           backgroundColor: message.includes('❌') ? '#f8d7da' : '#d4edda',
           border: '1px solid',
@@ -230,8 +173,8 @@ const ModalsTesting = () => {
 
       {/* Loading Indicator */}
       {isLoading && (
-        <div style={{
-          textAlign: 'center',
+        <div style={{ 
+          textAlign: 'center', 
           padding: '20px',
           color: '#007bff'
         }}>
